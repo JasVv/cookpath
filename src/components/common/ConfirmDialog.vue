@@ -25,20 +25,20 @@ const emit = defineEmits<{
 
 <template>
   <ModalBase :title="title" width-class="max-w-md" @close="emit('cancel')">
-    <p class="text-sm text-slate-700 whitespace-pre-line">{{ message }}</p>
+    <p class="text-sm text-text whitespace-pre-line">{{ message }}</p>
     <template #footer>
       <div class="flex justify-end gap-2">
         <button
           type="button"
-          class="px-4 py-1.5 rounded border border-slate-300 bg-white text-slate-700 text-sm hover:bg-slate-100"
+          class="px-4 py-1.5 rounded-md border border-border bg-surface text-text text-sm font-semibold hover:bg-bg-subtle transition-colors"
           @click="emit('cancel')"
         >
           {{ cancelLabel }}
         </button>
         <button
           type="button"
-          class="px-4 py-1.5 rounded text-white text-sm"
-          :class="danger ? 'bg-rose-600 hover:bg-rose-700' : 'bg-emerald-600 hover:bg-emerald-700'"
+          class="px-4 py-1.5 rounded-md text-white text-sm font-semibold transition-colors"
+          :class="danger ? 'bg-danger hover:bg-danger/90' : 'bg-primary hover:bg-primary-hover'"
           @click="emit('ok')"
         >
           {{ okLabel }}

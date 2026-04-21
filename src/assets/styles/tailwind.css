@@ -2,14 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Color */
+  --bg: #FAF5EC;
+  --bg-subtle: #F2EADB;
+  --surface: #FFFFFF;
+  --border: #E8DFCB;
+  --border-strong: #D2C3A2;
+  --grid-line: #EDE2CB;
+  --text: #262320;
+  --text-muted: #7E7466;
+  --text-subtle: #A89B87;
+  --primary: #E07856;
+  --primary-hover: #C9623F;
+  --primary-soft: #F9E0D1;
+  --primary-ring: rgba(224, 120, 86, 0.35);
+  --accent: #3E5A46;
+  --accent-hover: #324A3A;
+  --accent-soft: #DDE5DC;
+  --danger: #B54A2B;
+  --danger-soft: #F6DED3;
+  --sunday: #B54A2B;
+  --saturday: #3F5A78;
+
+  /* Typography */
+  --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* Radius & shadow */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --shadow-card: 0 1px 2px rgba(40, 30, 20, 0.04), 0 2px 8px rgba(40, 30, 20, 0.04);
+  --shadow-raised: 0 4px 16px rgba(40, 30, 20, 0.08);
+}
+
 html,
 body,
 #app {
   height: 100%;
 }
 
+html,
 body {
-  @apply bg-slate-50 text-slate-900;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-    'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-feature-settings: "palt";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* フォーカスリング統一 */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--primary-ring);
+  border-radius: inherit;
+}
+
+/* 数値揃え */
+.tabular {
+  font-variant-numeric: tabular-nums;
 }

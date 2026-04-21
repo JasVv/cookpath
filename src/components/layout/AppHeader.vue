@@ -11,23 +11,22 @@ const navItems = [
 </script>
 
 <template>
-  <header class="bg-white border-b border-slate-200 shadow-sm">
-    <div class="max-w-screen-2xl mx-auto px-6 py-3 flex items-center gap-8">
-      <h1 class="text-lg font-bold text-slate-800 whitespace-nowrap">
-        Cookpath <span class="text-sm font-normal text-slate-500">-メニュー記録と買い物サポート-</span>
-      </h1>
-      <nav class="flex gap-1">
-        <RouterLink
-          v-for="item in navItems"
-          :key="item.to"
-          :to="item.to"
-          class="px-3 py-1.5 rounded text-sm font-medium text-slate-600 hover:bg-slate-100"
-          active-class="!bg-emerald-100 !text-emerald-700"
-          :exact-active-class="item.to === '/' ? '!bg-emerald-100 !text-emerald-700' : ''"
-        >
-          {{ item.label }}
-        </RouterLink>
-      </nav>
-    </div>
+  <header class="bg-surface border-b border-border px-7 py-3.5 flex items-center gap-8">
+    <h1 class="font-bold whitespace-nowrap">
+      <span class="text-primary text-lg">Cookpath</span>
+      <span class="text-text-muted font-normal text-xs ml-1.5">−メニュー記録と買い物サポート−</span>
+    </h1>
+    <nav class="ml-auto flex gap-1">
+      <RouterLink
+        v-for="item in navItems"
+        :key="item.to"
+        :to="item.to"
+        class="px-3.5 py-1.5 text-[13.5px] font-medium rounded-md text-text-muted border border-transparent hover:text-text hover:bg-bg-subtle transition-colors"
+        active-class="!bg-primary-soft !text-primary !font-semibold !border-primary/25"
+        :exact-active-class="item.to === '/' ? '!bg-primary-soft !text-primary !font-semibold !border-primary/25' : ''"
+      >
+        {{ item.label }}
+      </RouterLink>
+    </nav>
   </header>
 </template>

@@ -156,31 +156,31 @@ async function save() {
   <ModalBase :title="title" width-class="max-w-3xl" @close="emit('close')">
     <div class="space-y-3">
       <div class="flex items-center gap-2">
-        <span class="text-sm text-slate-600">＋料理を追加</span>
+        <span class="text-sm text-text-muted">＋料理を追加</span>
         <button
           type="button"
-          class="px-3 py-1 text-sm border border-slate-300 rounded hover:bg-slate-100"
+          class="px-3 py-1 text-xs font-semibold border border-border rounded-md bg-surface text-text hover:bg-bg-subtle transition-colors"
           @click="openPicker"
         >
           レシピから選択
         </button>
         <button
           type="button"
-          class="px-3 py-1 text-sm border border-slate-300 rounded hover:bg-slate-100"
+          class="px-3 py-1 text-xs font-semibold border border-border rounded-md bg-surface text-text hover:bg-bg-subtle transition-colors"
           @click="addDirectDish"
         >
           直接入力
         </button>
       </div>
 
-      <div v-if="pickerOpen" class="border border-slate-200 rounded p-2 bg-slate-50">
+      <div v-if="pickerOpen" class="border border-border rounded-lg p-2 bg-bg-subtle">
         <RecipePicker
           @select="onRecipeSelected"
           @close="pickerOpen = false"
         />
       </div>
 
-      <div v-if="dishes.length === 0" class="text-sm text-slate-500 py-8 text-center">
+      <div v-if="dishes.length === 0" class="text-sm text-text-muted py-8 text-center">
         料理が登録されていません。「＋料理を追加」から追加してください。
       </div>
 
@@ -206,14 +206,14 @@ async function save() {
       <div class="flex justify-end gap-2">
         <button
           type="button"
-          class="px-4 py-1.5 rounded border border-slate-300 bg-white text-slate-700 text-sm hover:bg-slate-100"
+          class="px-4 py-1.5 rounded-md border border-border bg-surface text-text text-sm font-semibold hover:bg-bg-subtle transition-colors"
           @click="emit('close')"
         >
           キャンセル
         </button>
         <button
           type="button"
-          class="px-4 py-1.5 rounded bg-emerald-600 text-white text-sm hover:bg-emerald-700"
+          class="px-4 py-1.5 rounded-md bg-primary text-white text-sm font-semibold hover:bg-primary-hover transition-colors"
           @click="save"
         >
           保存

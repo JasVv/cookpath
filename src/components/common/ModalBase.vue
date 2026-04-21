@@ -30,19 +30,19 @@ const widthClass = props.widthClass ?? 'max-w-2xl'
 
 <template>
   <div
-    class="fixed inset-0 z-50 bg-slate-900/40 flex items-start justify-center overflow-y-auto py-10 px-4"
+    class="fixed inset-0 z-50 bg-ink-900/40 backdrop-blur-[2px] flex items-start justify-center overflow-y-auto py-10 px-4"
     @mousedown="onOverlay"
   >
     <div
-      class="bg-white rounded-lg shadow-xl w-full"
+      class="bg-surface rounded-xl shadow-raised border border-border w-full"
       :class="widthClass"
       @mousedown.stop
     >
-      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-200">
-        <h2 class="text-base font-semibold text-slate-800">{{ title }}</h2>
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-border">
+        <h2 class="text-base font-bold text-text">{{ title }}</h2>
         <button
           type="button"
-          class="text-slate-400 hover:text-slate-700 text-xl leading-none"
+          class="text-text-muted hover:text-text text-xl leading-none px-1 transition-colors"
           @click="emit('close')"
           aria-label="閉じる"
         >
@@ -52,7 +52,7 @@ const widthClass = props.widthClass ?? 'max-w-2xl'
       <div class="px-5 py-4">
         <slot />
       </div>
-      <div v-if="$slots.footer" class="px-5 py-3 border-t border-slate-200 bg-slate-50 rounded-b-lg">
+      <div v-if="$slots.footer" class="px-5 py-3 border-t border-border bg-bg-subtle rounded-b-xl">
         <slot name="footer" />
       </div>
     </div>

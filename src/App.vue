@@ -11,9 +11,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col bg-bg text-text">
     <AppHeader />
-    <main class="flex-1 px-6 py-6 max-w-screen-2xl w-full mx-auto">
+    <main class="flex-1 px-7 py-6 max-w-screen-2xl w-full mx-auto">
       <router-view />
     </main>
   </div>

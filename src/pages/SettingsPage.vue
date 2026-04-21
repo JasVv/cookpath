@@ -85,22 +85,36 @@ async function onRequestPersist() {
 
 <template>
   <section>
-    <h2 class="text-lg font-semibold text-slate-700 mb-4">設定</h2>
+    <h2 class="flex items-center gap-2.5 text-lg font-bold text-text mb-4">
+      <span class="w-1 h-5 rounded-sm bg-accent"></span>
+      設定
+    </h2>
+
+    <div
+      v-if="isStale"
+      class="max-w-2xl mb-4 flex items-center gap-2 px-3 py-2 rounded-md bg-primary-soft border border-primary/30 text-primary-hover text-xs"
+    >
+      <span>⚠</span>
+      <span>30日以上エクスポートされていません。バックアップを作成することを推奨します。</span>
+    </div>
 
     <div class="space-y-6 max-w-2xl">
-      <div class="bg-white border border-slate-200 rounded p-4 space-y-3">
-        <h3 class="font-semibold text-slate-800 text-sm">データ管理</h3>
+      <section class="bg-surface rounded-xl border border-border p-4 shadow-card space-y-3">
+        <h3 class="flex items-center gap-2.5">
+          <span class="w-1 h-4 rounded-sm bg-accent"></span>
+          <span class="text-sm font-bold text-text">データ管理</span>
+        </h3>
         <div class="flex gap-2">
           <button
             type="button"
-            class="px-4 py-1.5 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700"
+            class="px-3.5 py-1.5 text-[13px] font-semibold rounded-md bg-primary text-white hover:bg-primary-hover transition-colors"
             @click="onExport"
           >
             JSONエクスポート
           </button>
           <button
             type="button"
-            class="px-4 py-1.5 border border-slate-300 text-sm rounded hover:bg-slate-100"
+            class="px-3.5 py-1.5 text-[13px] font-semibold rounded-md border border-border bg-surface text-text hover:bg-bg-subtle transition-colors"
             @click="onImportClick"
           >
             JSONインポート
@@ -113,40 +127,37 @@ async function onRequestPersist() {
             @change="onImportFileSelected"
           />
         </div>
-        <div class="text-sm text-slate-600">
+        <div class="text-sm text-text-muted tabular">
           最終エクスポート: {{ lastExportedLabel }}
         </div>
-        <div
-          v-if="isStale"
-          class="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded px-3 py-2"
-        >
-          ⚠ 30日以上エクスポートされていません。バックアップを作成することを推奨します。
-        </div>
-        <div v-if="errorMessage" class="text-sm text-rose-600">{{ errorMessage }}</div>
-      </div>
+        <div v-if="errorMessage" class="text-sm text-danger bg-danger-soft border border-danger/30 rounded-md px-3 py-2">{{ errorMessage }}</div>
+      </section>
 
-      <div class="bg-white border border-slate-200 rounded p-4 space-y-3">
-        <h3 class="font-semibold text-slate-800 text-sm">ストレージ</h3>
-        <div class="text-sm text-slate-600">
+      <section class="bg-surface rounded-xl border border-border p-4 shadow-card space-y-3">
+        <h3 class="flex items-center gap-2.5">
+          <span class="w-1 h-4 rounded-sm bg-accent"></span>
+          <span class="text-sm font-bold text-text">ストレージ</span>
+        </h3>
+        <div class="text-sm text-text-muted">
           永続化ストレージ:
-          <span v-if="persisted" class="text-emerald-700 font-medium">許可済み ✓</span>
-          <span v-else class="text-slate-500">未許可</span>
+          <span v-if="persisted" class="text-accent font-semibold">許可済み ✓</span>
+          <span v-else class="text-text-subtle">未許可</span>
         </div>
         <div>
           <button
             type="button"
-            class="px-3 py-1 border border-slate-300 text-sm rounded hover:bg-slate-100 disabled:opacity-50"
+            class="px-3 py-1 text-xs font-semibold border border-border rounded-md bg-surface text-text hover:bg-bg-subtle disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             :disabled="persisted"
             @click="onRequestPersist"
           >
             永続化を要求
           </button>
         </div>
-        <div v-if="usage" class="text-sm text-slate-600">
+        <div v-if="usage" class="text-sm text-text-muted tabular">
           使用容量: {{ usageMB }} MB
           <span v-if="quotaMB">/ 推定上限 約{{ quotaMB }} MB</span>
         </div>
-      </div>
+      </section>
     </div>
 
     <ConfirmDialog

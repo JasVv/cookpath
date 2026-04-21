@@ -76,17 +76,17 @@ async function save() {
   >
     <div class="space-y-4">
       <label class="block text-sm">
-        <span class="text-slate-600">名前</span>
+        <span class="text-text-muted font-medium">名前</span>
         <input
           v-model="name"
           type="text"
-          class="mt-1 w-full px-3 py-1.5 border border-slate-300 rounded"
+          class="mt-1 w-full px-3 py-2 border border-border rounded-md bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30"
           placeholder="例: 焼き鮭(基本)"
         />
       </label>
 
       <div>
-        <span class="text-sm text-slate-600">材料</span>
+        <span class="text-sm text-text-muted font-medium">材料</span>
         <div class="mt-1 space-y-2">
           <IngredientRow
             v-for="(ing, idx) in ingredients"
@@ -97,7 +97,7 @@ async function save() {
           />
           <button
             type="button"
-            class="text-sm text-emerald-700 hover:underline"
+            class="text-sm text-accent font-semibold hover:text-accent-hover hover:underline"
             @click="addIngredient"
           >
             ＋材料を追加
@@ -106,11 +106,11 @@ async function save() {
       </div>
 
       <label class="block text-sm">
-        <span class="text-slate-600">手順メモ</span>
+        <span class="text-text-muted font-medium">手順メモ</span>
         <textarea
           v-model="procedureMemo"
           rows="4"
-          class="mt-1 w-full px-3 py-1.5 border border-slate-300 rounded text-sm"
+          class="mt-1 w-full px-3 py-2 border border-border rounded-md text-sm bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30"
           placeholder="簡潔な手順メモ"
         />
       </label>
@@ -120,14 +120,14 @@ async function save() {
       <div class="flex justify-end gap-2">
         <button
           type="button"
-          class="px-4 py-1.5 rounded border border-slate-300 bg-white text-slate-700 text-sm hover:bg-slate-100"
+          class="px-4 py-1.5 rounded-md border border-border bg-surface text-text text-sm font-semibold hover:bg-bg-subtle transition-colors"
           @click="emit('close')"
         >
           キャンセル
         </button>
         <button
           type="button"
-          class="px-4 py-1.5 rounded bg-emerald-600 text-white text-sm hover:bg-emerald-700 disabled:bg-slate-300"
+          class="px-4 py-1.5 rounded-md bg-primary text-white text-sm font-semibold hover:bg-primary-hover disabled:bg-border-strong disabled:cursor-not-allowed transition-colors"
           :disabled="!canSave"
           @click="save"
         >

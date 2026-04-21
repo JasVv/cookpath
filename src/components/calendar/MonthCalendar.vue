@@ -33,30 +33,30 @@ const weekdayLabels = ['日', '月', '火', '水', '木', '金', '土']
     <div class="flex items-center gap-3 mb-2">
       <button
         type="button"
-        class="px-3 py-1 rounded border border-slate-300 bg-white text-sm hover:bg-slate-100"
+        class="px-3 py-1 rounded-md border border-border bg-surface text-sm text-text hover:bg-bg-subtle transition-colors"
         @click="emit('prev')"
         aria-label="前の月"
       >
         ◀
       </button>
-      <h3 class="text-base font-semibold text-slate-800 min-w-[120px] text-center">
+      <h3 class="text-base font-bold text-text min-w-[120px] text-center tabular">
         {{ formatJpMonth(anchor) }}
       </h3>
       <button
         type="button"
-        class="px-3 py-1 rounded border border-slate-300 bg-white text-sm hover:bg-slate-100"
+        class="px-3 py-1 rounded-md border border-border bg-surface text-sm text-text hover:bg-bg-subtle transition-colors"
         @click="emit('next')"
         aria-label="次の月"
       >
         ▶
       </button>
     </div>
-    <div class="grid grid-cols-7 bg-slate-200 gap-px rounded overflow-hidden">
+    <div class="grid grid-cols-7 bg-grid gap-px rounded-lg overflow-hidden border border-border">
       <div
         v-for="(label, idx) in weekdayLabels"
         :key="label"
-        class="bg-slate-100 text-center text-xs font-medium py-1"
-        :class="idx === 0 ? 'text-rose-600' : idx === 6 ? 'text-blue-600' : 'text-slate-600'"
+        class="bg-bg-subtle text-center text-xs font-semibold py-1.5"
+        :class="idx === 0 ? 'text-sunday' : idx === 6 ? 'text-saturday' : 'text-text-muted'"
       >
         {{ label }}
       </div>

@@ -36,9 +36,9 @@ function weekdayOf(date: Date): string {
 }
 function weekdayColor(date: Date): string {
   const d = date.getDay()
-  if (d === 0) return 'text-rose-600'
-  if (d === 6) return 'text-blue-600'
-  return 'text-slate-600'
+  if (d === 0) return 'text-sunday'
+  if (d === 6) return 'text-saturday'
+  return 'text-text-muted'
 }
 
 // eslint などで未使用扱い回避
@@ -50,29 +50,29 @@ void addDays
     <div class="flex items-center gap-3 mb-2">
       <button
         type="button"
-        class="px-3 py-1 rounded border border-slate-300 bg-white text-sm hover:bg-slate-100"
+        class="px-3 py-1 rounded-md border border-border bg-surface text-sm text-text hover:bg-bg-subtle transition-colors"
         @click="emit('prev')"
         aria-label="1日前"
       >
         ◀
       </button>
-      <h3 class="text-base font-semibold text-slate-800 min-w-[220px] text-center">
+      <h3 class="text-base font-bold text-text min-w-[220px] text-center tabular">
         {{ rangeLabel }}
       </h3>
       <button
         type="button"
-        class="px-3 py-1 rounded border border-slate-300 bg-white text-sm hover:bg-slate-100"
+        class="px-3 py-1 rounded-md border border-border bg-surface text-sm text-text hover:bg-bg-subtle transition-colors"
         @click="emit('next')"
         aria-label="1日後"
       >
         ▶
       </button>
     </div>
-    <div class="grid grid-cols-7 bg-slate-200 gap-px rounded overflow-hidden">
+    <div class="grid grid-cols-7 bg-grid gap-px rounded-lg overflow-hidden border border-border">
       <div
         v-for="day in days"
         :key="'label-' + toDateKey(day)"
-        class="bg-slate-100 text-center text-xs py-1"
+        class="bg-bg-subtle text-center text-xs font-semibold py-1.5 tabular"
         :class="weekdayColor(day)"
       >
         {{ weekdayOf(day) }} {{ day.getMonth() + 1 }}/{{ day.getDate() }}

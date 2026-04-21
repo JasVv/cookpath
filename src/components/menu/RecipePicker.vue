@@ -20,18 +20,18 @@ watch(query, reload)
 </script>
 
 <template>
-  <div class="border border-slate-300 rounded-md bg-white shadow-sm w-80">
-    <div class="p-2 border-b border-slate-200 flex items-center gap-2">
+  <div class="border border-border rounded-lg bg-surface shadow-card w-80">
+    <div class="p-2 border-b border-border flex items-center gap-2">
       <input
         v-model="query"
         type="text"
-        class="flex-1 px-2 py-1 border border-slate-300 rounded text-sm"
+        class="flex-1 px-2.5 py-1.5 border border-border rounded-md text-sm bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30"
         placeholder="レシピ名で検索"
         autofocus
       />
       <button
         type="button"
-        class="text-slate-400 hover:text-slate-700 text-sm"
+        class="px-2 py-1 text-text-muted hover:text-text hover:bg-bg-subtle rounded-md text-sm transition-colors"
         @click="emit('close')"
         aria-label="閉じる"
       >
@@ -42,20 +42,20 @@ watch(query, reload)
       <li
         v-for="r in results"
         :key="r.id"
-        class="px-3 py-2 text-sm hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-b-0"
+        class="px-3 py-2 text-sm hover:bg-bg-subtle cursor-pointer border-b border-border last:border-b-0 transition-colors"
         @click="emit('select', r)"
       >
-        <div class="font-medium text-slate-800">{{ r.name }}</div>
+        <div class="font-semibold text-text">{{ r.name }}</div>
         <div
           v-if="r.ingredients.length > 0"
-          class="text-xs text-slate-500 truncate"
+          class="text-xs text-text-muted truncate"
         >
           {{ r.ingredients.map((i) => i.name).filter(Boolean).join(', ') }}
         </div>
       </li>
       <li
         v-if="results.length === 0"
-        class="px-3 py-6 text-sm text-slate-400 text-center"
+        class="px-3 py-6 text-sm text-text-subtle text-center"
       >
         一致するレシピがありません
       </li>

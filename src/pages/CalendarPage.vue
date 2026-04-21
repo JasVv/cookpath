@@ -167,37 +167,37 @@ function cancelDrop() {
 
     <div
       v-if="dropConfirm"
-      class="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4"
+      class="fixed inset-0 z-50 bg-ink-900/40 backdrop-blur-[2px] flex items-center justify-center p-4"
       @mousedown.self="cancelDrop"
     >
-      <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-5">
-        <h3 class="text-base font-semibold text-slate-800 mb-2">ドロップ先に既に献立があります</h3>
-        <p class="text-sm text-slate-600 mb-4">
+      <div class="bg-surface rounded-xl shadow-raised border border-border w-full max-w-md p-5">
+        <h3 class="text-base font-bold text-text mb-2">ドロップ先に既に献立があります</h3>
+        <p class="text-sm text-text-muted mb-4">
           {{ dropConfirm.fromDate }} の献立を {{ dropConfirm.toDate }} にどう反映しますか？
         </p>
         <div class="flex flex-col gap-2 text-sm">
           <button
             type="button"
-            class="px-4 py-2 border border-slate-300 rounded hover:bg-slate-50 text-left"
+            class="px-4 py-2 border border-border rounded-md bg-surface hover:bg-bg-subtle text-left"
             @click="performOverwrite"
           >
-            <span class="font-medium">上書き</span>
-            <span class="text-slate-500 ml-2">ドラッグ元はそのまま、ドロップ先を置換（コピー）</span>
+            <span class="font-semibold text-text">上書き</span>
+            <span class="text-text-muted ml-2">ドラッグ元はそのまま、ドロップ先を置換（コピー）</span>
           </button>
           <button
             type="button"
-            class="px-4 py-2 border border-slate-300 rounded hover:bg-slate-50 text-left"
+            class="px-4 py-2 border border-border rounded-md bg-surface hover:bg-bg-subtle text-left"
             @click="performSwap"
           >
-            <span class="font-medium">入れ替え</span>
-            <span class="text-slate-500 ml-2">ドラッグ元とドロップ先の内容を交換</span>
+            <span class="font-semibold text-text">入れ替え</span>
+            <span class="text-text-muted ml-2">ドラッグ元とドロップ先の内容を交換</span>
           </button>
           <button
             type="button"
-            class="px-4 py-2 border border-slate-300 rounded hover:bg-slate-50 text-left"
+            class="px-4 py-2 border border-border rounded-md bg-surface hover:bg-bg-subtle text-left"
             @click="cancelDrop"
           >
-            <span class="font-medium">キャンセル</span>
+            <span class="font-semibold text-text">キャンセル</span>
           </button>
         </div>
       </div>

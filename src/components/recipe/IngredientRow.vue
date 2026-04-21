@@ -17,28 +17,28 @@ function update(field: keyof Ingredient, value: string) {
   <div class="flex gap-2 items-center">
     <input
       type="text"
-      class="flex-1 px-2 py-1 border border-slate-300 rounded text-sm"
+      class="flex-1 px-2.5 py-1.5 border border-border rounded-md text-sm bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30"
       placeholder="材料名"
       :value="modelValue.name"
       @input="update('name', ($event.target as HTMLInputElement).value)"
     />
     <input
       type="text"
-      class="w-24 px-2 py-1 border border-slate-300 rounded text-sm"
+      class="w-24 px-2.5 py-1.5 border border-border rounded-md text-sm bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30 tabular"
       placeholder="分量"
       :value="modelValue.amount"
       @input="update('amount', ($event.target as HTMLInputElement).value)"
     />
     <input
       type="text"
-      class="w-20 px-2 py-1 border border-slate-300 rounded text-sm"
+      class="w-20 px-2.5 py-1.5 border border-border rounded-md text-sm bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30"
       placeholder="単位"
       :value="modelValue.unit"
       @input="update('unit', ($event.target as HTMLInputElement).value)"
     />
     <button
       type="button"
-      class="text-slate-400 hover:text-rose-600 text-sm"
+      class="px-2 py-1 text-text-muted hover:text-danger hover:bg-danger-soft rounded-md text-sm transition-colors"
       @click="emit('remove')"
       aria-label="削除"
     >

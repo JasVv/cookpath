@@ -79,13 +79,13 @@ function onDrop(ev: DragEvent) {
 
 <template>
   <div
-    class="relative flex flex-col border border-slate-200 bg-white cursor-pointer transition-colors"
+    class="relative flex flex-col bg-surface cursor-pointer transition-colors"
     :class="[
       compact ? 'min-h-[110px]' : 'min-h-[100px]',
-      isOutsideMonth ? 'bg-slate-50 text-slate-400' : '',
-      isToday ? 'ring-2 ring-emerald-400 ring-inset' : '',
+      isOutsideMonth ? 'bg-bg-subtle text-text-subtle' : '',
+      isToday ? 'bg-primary-soft ring-[1.5px] ring-inset ring-primary' : '',
       isDragSource ? 'opacity-40' : '',
-      isDropTarget ? 'bg-emerald-50 border-emerald-400' : 'hover:bg-slate-50',
+      isDropTarget ? 'bg-accent-soft ring-[1.5px] ring-inset ring-accent' : 'hover:bg-bg-subtle',
     ]"
     :draggable="hasMenu"
     @click="emit('click', date)"
@@ -98,8 +98,8 @@ function onDrop(ev: DragEvent) {
   >
     <div class="flex items-center justify-between px-1.5 pt-1 select-none">
       <span
-        class="text-xs"
-        :class="isToday ? 'font-bold text-emerald-700' : 'text-slate-500'"
+        class="text-xs tabular"
+        :class="isToday ? 'font-bold text-primary' : 'text-text-muted'"
       >
         {{ dayNumber }}
       </span>
@@ -110,7 +110,8 @@ function onDrop(ev: DragEvent) {
       <li
         v-for="dish in dishes"
         :key="dish.id"
-        class="truncate text-slate-700"
+        class="truncate"
+        :class="isToday ? 'text-primary font-semibold' : 'text-text'"
         :title="dish.name"
       >
         {{ dish.name || '(無題)' }}

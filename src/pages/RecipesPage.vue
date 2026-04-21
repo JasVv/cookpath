@@ -50,10 +50,13 @@ function summarizeIngredients(recipe: Recipe): string {
 <template>
   <section>
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-lg font-semibold text-slate-700">レシピ管理</h2>
+      <h2 class="flex items-center gap-2.5 text-lg font-bold text-text">
+        <span class="w-1 h-5 rounded-sm bg-accent"></span>
+        レシピ管理
+      </h2>
       <button
         type="button"
-        class="px-4 py-1.5 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700"
+        class="px-3.5 py-1.5 text-[13px] font-semibold rounded-md bg-primary text-white hover:bg-primary-hover transition-colors"
         @click="openNew"
       >
         ＋新規レシピ
@@ -62,17 +65,17 @@ function summarizeIngredients(recipe: Recipe): string {
 
     <div class="flex items-center gap-3 mb-4">
       <label class="flex items-center gap-2 text-sm">
-        <span class="text-slate-600">検索:</span>
+        <span class="text-text-muted">検索:</span>
         <input
           v-model="query"
           type="text"
-          class="px-2 py-1 border border-slate-300 rounded w-60 text-sm"
+          class="px-3 py-1.5 border border-border rounded-md w-60 text-sm bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30"
           placeholder="レシピ名"
         />
       </label>
       <label class="flex items-center gap-2 text-sm">
-        <span class="text-slate-600">並び順:</span>
-        <select v-model="sort" class="px-2 py-1 border border-slate-300 rounded text-sm">
+        <span class="text-text-muted">並び順:</span>
+        <select v-model="sort" class="px-3 py-1.5 border border-border rounded-md text-sm bg-surface text-text focus:border-primary focus:ring-2 focus:ring-primary/30">
           <option value="updatedDesc">更新日新順</option>
           <option value="updatedAsc">更新日古順</option>
           <option value="nameAsc">名前昇順</option>
@@ -81,7 +84,7 @@ function summarizeIngredients(recipe: Recipe): string {
       </label>
     </div>
 
-    <div v-if="recipes.length === 0" class="text-sm text-slate-500 py-8 text-center">
+    <div v-if="recipes.length === 0" class="text-sm text-text-muted py-8 text-center">
       レシピがまだありません。
     </div>
 
@@ -89,30 +92,30 @@ function summarizeIngredients(recipe: Recipe): string {
       <li
         v-for="recipe in recipes"
         :key="recipe.id"
-        class="bg-white border border-slate-200 rounded p-3 flex items-start justify-between gap-4"
+        class="bg-surface border border-border rounded-lg p-3.5 flex items-start justify-between gap-4 shadow-card"
       >
         <div class="flex-1 min-w-0">
           <div class="flex items-baseline gap-3">
-            <h3 class="font-semibold text-slate-800 truncate">{{ recipe.name }}</h3>
-            <span class="text-xs text-slate-500 whitespace-nowrap">
+            <h3 class="font-semibold text-text truncate">{{ recipe.name }}</h3>
+            <span class="text-xs text-text-muted whitespace-nowrap tabular">
               更新: {{ formatJpDateTime(recipe.updatedAt) }}
             </span>
           </div>
-          <p class="text-sm text-slate-600 mt-1 truncate">
+          <p class="text-sm text-text-muted mt-1 truncate">
             材料: {{ summarizeIngredients(recipe) }}
           </p>
         </div>
         <div class="flex gap-1 shrink-0">
           <button
             type="button"
-            class="px-3 py-1 text-sm border border-slate-300 rounded hover:bg-slate-100"
+            class="px-3 py-1 text-xs font-semibold border border-border rounded-md bg-surface text-text hover:bg-bg-subtle transition-colors"
             @click="openEdit(recipe)"
           >
             編集
           </button>
           <button
             type="button"
-            class="px-3 py-1 text-sm border border-rose-300 text-rose-600 rounded hover:bg-rose-50"
+            class="px-3 py-1 text-xs font-semibold border border-danger/40 text-danger rounded-md bg-surface hover:bg-danger-soft transition-colors"
             @click="onDelete(recipe)"
           >
             削除
