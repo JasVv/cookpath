@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useShoppingList } from '@/composables/useShoppingList'
 import { formatJpDateShort, parseDateKey } from '@/utils/date'
+import ShareQrModal from '@/components/shopping/ShareQrModal.vue'
 
 const {
   fromKey,
@@ -35,6 +36,40 @@ function toggle(id: string) {
 function sourceLabel(dateKey: string, dishName: string): string {
   return `${formatJpDateShort(parseDateKey(dateKey))} ${dishName || '(無題)'}`
 }
+
+const qrModalOpen = ref(false)
+
+const shareText = computed(() => {
+  const lines: string[] = []
+  const fmt = (key: string) => {
+    const d = parseDateKey(key)
+    return `${d.getMonth() + 1}/${d.getDate()}`
+  }
+  lines.push(`買い物リスト ${fmt(fromKey.value)}〜${fmt(toKey.value)}`)
+
+  if (displayRows.value.length > 0) {
+    lines.push('')
+    lines.push('[食材]')
+    for (const r of displayRows.value) {
+      const qty = [r.amount, r.unit].filter((s) => s && s.trim()).join('')
+      lines.push(`- ${r.name}${qty ? ' ' + qty : ''}`)
+    }
+  }
+
+  if (displaySupplyRows.value.length > 0) {
+    lines.push('')
+    lines.push('[日用品]')
+    for (const r of displaySupplyRows.value) {
+      lines.push(`- ${r.name}`)
+    }
+  }
+
+  return lines.join('\n')
+})
+
+const canShare = computed(
+  () => displayRows.value.length > 0 || displaySupplyRows.value.length > 0,
+)
 </script>
 
 <template>
@@ -133,7 +168,7 @@ function sourceLabel(dateKey: string, dishName: string): string {
       </div>
     </div>
 
-    <div v-if="rows.length > 0 || supplyRows.length > 0" class="mt-3">
+    <div v-if="rows.length > 0 || supplyRows.length > 0" class="mt-3 flex flex-wrap gap-2">
       <button
         type="button"
         class="px-3 py-1.5 text-xs font-semibold border border-border rounded-md bg-surface text-text hover:bg-bg-subtle transition-colors"
@@ -141,6 +176,20 @@ function sourceLabel(dateKey: string, dishName: string): string {
       >
         すべてチェック解除
       </button>
+      <button
+        type="button"
+        class="px-3 py-1.5 text-xs font-semibold border border-border rounded-md bg-surface text-text hover:bg-bg-subtle disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        :disabled="!canShare"
+        @click="qrModalOpen = true"
+      >
+        QRコードで共有
+      </button>
     </div>
+
+    <ShareQrModal
+      v-if="qrModalOpen"
+      :text="shareText"
+      @close="qrModalOpen = false"
+    />
   </section>
 </template>
