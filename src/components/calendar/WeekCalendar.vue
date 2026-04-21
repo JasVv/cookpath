@@ -9,6 +9,7 @@ const props = defineProps<{
   today: Date
   menusByDate: Record<string, MenuEntry>
   dragSourceDate: string | null
+  dragSourceRecipeId: string | null
   dropTargetDate: string | null
 }>()
 
@@ -19,6 +20,7 @@ const emit = defineEmits<{
   (e: 'dragstart', date: string): void
   (e: 'dragend'): void
   (e: 'drop', payload: { fromDate: string; toDate: string }): void
+  (e: 'dropRecipe', payload: { recipeId: string; toDate: string }): void
   (e: 'dragenter', date: string): void
   (e: 'dragleave', date: string): void
 }>()
@@ -85,11 +87,13 @@ void addDays
         :is-today="isSameDay(day, today)"
         compact
         :drag-source-date="dragSourceDate"
+        :drag-source-recipe-id="dragSourceRecipeId"
         :drop-target-date="dropTargetDate"
         @click="emit('cellClick', $event)"
         @dragstart="emit('dragstart', $event)"
         @dragend="emit('dragend')"
         @drop="emit('drop', $event)"
+        @drop-recipe="emit('dropRecipe', $event)"
         @dragenter="emit('dragenter', $event)"
         @dragleave="emit('dragleave', $event)"
       />

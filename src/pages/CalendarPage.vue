@@ -3,7 +3,8 @@ import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import MonthCalendar from '@/components/calendar/MonthCalendar.vue'
 import WeekCalendar from '@/components/calendar/WeekCalendar.vue'
 import MenuEditModal from '@/components/menu/MenuEditModal.vue'
-import type { MenuEntry } from '@/domain/types'
+import RecipeSidebar from '@/components/recipe/RecipeSidebar.vue'
+import type { Dish, MenuEntry } from '@/domain/types'
 import { useMenus } from '@/composables/useMenus'
 import { lockBodyScroll, unlockBodyScroll } from '@/composables/useBodyScrollLock'
 import {
@@ -14,7 +15,9 @@ import {
   toDateKey,
   weekDaysFrom,
 } from '@/utils/date'
-import { copyMenu, swapMenu } from '@/db/repositories/menus'
+import { cloneDishes, copyMenu, getMenu, swapMenu } from '@/db/repositories/menus'
+import { getRecipe } from '@/db/repositories/recipes'
+import { genId } from '@/utils/id'
 
 const today = new Date()
 const monthAnchor = ref(startOfMonth(today))
@@ -23,6 +26,7 @@ const { menusByDate, loadRange, save } = useMenus()
 
 const editingDate = ref<string | null>(null)
 const dragSourceDate = ref<string | null>(null)
+const dragSourceRecipeId = ref<string | null>(null)
 const dropTargetDate = ref<string | null>(null)
 
 const dropConfirm = ref<null | { fromDate: string; toDate: string }>(null)
@@ -96,6 +100,7 @@ function onDragStart(date: string) {
 }
 function onDragEnd() {
   dragSourceDate.value = null
+  dragSourceRecipeId.value = null
   dropTargetDate.value = null
 }
 function onDragEnter(date: string) {
@@ -103,6 +108,10 @@ function onDragEnter(date: string) {
 }
 function onDragLeave(date: string) {
   if (dropTargetDate.value === date) dropTargetDate.value = null
+}
+
+function onRecipeDragStart(recipeId: string) {
+  dragSourceRecipeId.value = recipeId
 }
 
 async function onDrop(payload: { fromDate: string; toDate: string }) {
@@ -119,6 +128,27 @@ async function onDrop(payload: { fromDate: string; toDate: string }) {
     return
   }
   dropConfirm.value = { fromDate, toDate }
+}
+
+async function onDropRecipe(payload: { recipeId: string; toDate: string }) {
+  const { recipeId, toDate } = payload
+  try {
+    const recipe = await getRecipe(recipeId)
+    if (!recipe) return
+    const existing = await getMenu(toDate)
+    const newDish: Dish = {
+      id: genId(),
+      name: recipe.name,
+      recipeId: recipe.id,
+      ingredients: recipe.ingredients.map((i) => ({ ...i })),
+      procedureMemo: recipe.procedureMemo,
+    }
+    const dishes = existing ? [...cloneDishes(existing.dishes), newDish] : [newDish]
+    await save({ date: toDate, dishes })
+    await reloadAll()
+  } finally {
+    onDragEnd()
+  }
 }
 
 async function performOverwrite() {
@@ -144,37 +174,48 @@ function cancelDrop() {
 </script>
 
 <template>
-  <section class="space-y-6">
-    <WeekCalendar
-      :anchor="weekAnchor"
-      :today="today"
-      :menus-by-date="menusByDate"
-      :drag-source-date="dragSourceDate"
-      :drop-target-date="dropTargetDate"
-      @prev="goPrevWeek"
-      @next="goNextWeek"
-      @cell-click="openEditor"
-      @dragstart="onDragStart"
-      @dragend="onDragEnd"
-      @drop="onDrop"
-      @dragenter="onDragEnter"
-      @dragleave="onDragLeave"
-    />
+  <div class="flex gap-6">
+    <section class="flex-1 min-w-0 space-y-6">
+      <WeekCalendar
+        :anchor="weekAnchor"
+        :today="today"
+        :menus-by-date="menusByDate"
+        :drag-source-date="dragSourceDate"
+        :drag-source-recipe-id="dragSourceRecipeId"
+        :drop-target-date="dropTargetDate"
+        @prev="goPrevWeek"
+        @next="goNextWeek"
+        @cell-click="openEditor"
+        @dragstart="onDragStart"
+        @dragend="onDragEnd"
+        @drop="onDrop"
+        @drop-recipe="onDropRecipe"
+        @dragenter="onDragEnter"
+        @dragleave="onDragLeave"
+      />
 
-    <MonthCalendar
-      :anchor="monthAnchor"
-      :today="today"
-      :menus-by-date="menusByDate"
-      :drag-source-date="dragSourceDate"
-      :drop-target-date="dropTargetDate"
-      @prev="goPrevMonth"
-      @next="goNextMonth"
-      @cell-click="openEditor"
-      @dragstart="onDragStart"
+      <MonthCalendar
+        :anchor="monthAnchor"
+        :today="today"
+        :menus-by-date="menusByDate"
+        :drag-source-date="dragSourceDate"
+        :drag-source-recipe-id="dragSourceRecipeId"
+        :drop-target-date="dropTargetDate"
+        @prev="goPrevMonth"
+        @next="goNextMonth"
+        @cell-click="openEditor"
+        @dragstart="onDragStart"
+        @dragend="onDragEnd"
+        @drop="onDrop"
+        @drop-recipe="onDropRecipe"
+        @dragenter="onDragEnter"
+        @dragleave="onDragLeave"
+      />
+    </section>
+
+    <RecipeSidebar
+      @dragstart="onRecipeDragStart"
       @dragend="onDragEnd"
-      @drop="onDrop"
-      @dragenter="onDragEnter"
-      @dragleave="onDragLeave"
     />
 
     <MenuEditModal
@@ -221,6 +262,5 @@ function cancelDrop() {
         </div>
       </div>
     </div>
-
-  </section>
+  </div>
 </template>
