@@ -47,19 +47,21 @@ const shareText = computed(() => {
   }
   lines.push(`買い物リスト ${fmt(fromKey.value)}〜${fmt(toKey.value)}`)
 
-  if (displayRows.value.length > 0) {
+  const uncheckedRows = displayRows.value.filter((r) => !checked.value[r.id])
+  if (uncheckedRows.length > 0) {
     lines.push('')
     lines.push('[食材]')
-    for (const r of displayRows.value) {
+    for (const r of uncheckedRows) {
       const qty = [r.amount, r.unit].filter((s) => s && s.trim()).join('')
       lines.push(`- ${r.name}${qty ? ' ' + qty : ''}`)
     }
   }
 
-  if (displaySupplyRows.value.length > 0) {
+  const uncheckedSupplyRows = displaySupplyRows.value.filter((r) => !checked.value[r.id])
+  if (uncheckedSupplyRows.length > 0) {
     lines.push('')
     lines.push('[日用品]')
-    for (const r of displaySupplyRows.value) {
+    for (const r of uncheckedSupplyRows) {
       lines.push(`- ${r.name}`)
     }
   }
@@ -68,7 +70,9 @@ const shareText = computed(() => {
 })
 
 const canShare = computed(
-  () => displayRows.value.length > 0 || displaySupplyRows.value.length > 0,
+  () =>
+    displayRows.value.some((r) => !checked.value[r.id]) ||
+    displaySupplyRows.value.some((r) => !checked.value[r.id]),
 )
 </script>
 
