@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import ModalBase from '@/components/common/ModalBase.vue'
+import MemoLinks from '@/components/common/MemoLinks.vue'
 import IngredientRow from '@/components/recipe/IngredientRow.vue'
 import type { Recipe, Ingredient } from '@/domain/types'
 import { createRecipe, updateRecipe } from '@/db/repositories/recipes'
@@ -105,15 +106,18 @@ async function save() {
         </div>
       </div>
 
-      <label class="block text-sm">
-        <span class="text-text-muted font-medium">手順メモ</span>
-        <textarea
-          v-model="procedureMemo"
-          rows="4"
-          class="mt-1 w-full px-3 py-2 border border-border rounded-md text-sm bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30"
-          placeholder="簡潔な手順メモ"
-        />
-      </label>
+      <div>
+        <label class="block text-sm">
+          <span class="text-text-muted font-medium">手順メモ</span>
+          <textarea
+            v-model="procedureMemo"
+            rows="4"
+            class="mt-1 w-full px-3 py-2 border border-border rounded-md text-sm bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30"
+            placeholder="簡潔な手順メモ"
+          />
+        </label>
+        <MemoLinks :text="procedureMemo" />
+      </div>
     </div>
 
     <template #footer>

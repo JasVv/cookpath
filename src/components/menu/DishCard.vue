@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { Dish, Ingredient, Recipe } from '@/domain/types'
 import IngredientRow from '@/components/recipe/IngredientRow.vue'
+import MemoLinks from '@/components/common/MemoLinks.vue'
 
 const props = defineProps<{
   dish: Dish
@@ -146,16 +147,19 @@ const canSaveAsRecipe = computed(
         </div>
       </div>
 
-      <label class="block text-sm">
-        <span class="text-text-muted font-medium">メモ</span>
-        <textarea
-          rows="2"
-          class="mt-1 w-full px-3 py-2 border border-border rounded-md text-sm bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30"
-          placeholder="簡潔な手順メモ"
-          :value="dish.procedureMemo"
-          @input="update('procedureMemo', ($event.target as HTMLTextAreaElement).value)"
-        />
-      </label>
+      <div>
+        <label class="block text-sm">
+          <span class="text-text-muted font-medium">メモ</span>
+          <textarea
+            rows="2"
+            class="mt-1 w-full px-3 py-2 border border-border rounded-md text-sm bg-surface text-text placeholder:text-text-subtle focus:border-primary focus:ring-2 focus:ring-primary/30"
+            placeholder="簡潔な手順メモ"
+            :value="dish.procedureMemo"
+            @input="update('procedureMemo', ($event.target as HTMLTextAreaElement).value)"
+          />
+        </label>
+        <MemoLinks :text="dish.procedureMemo" />
+      </div>
 
       <div class="flex gap-2">
         <button
