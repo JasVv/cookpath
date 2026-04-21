@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount } from 'vue'
+import { lockBodyScroll, unlockBodyScroll } from '@/composables/useBodyScrollLock'
 
 const props = defineProps<{
   title: string
@@ -20,9 +21,11 @@ function onKey(ev: KeyboardEvent) {
 
 onMounted(() => {
   document.addEventListener('keydown', onKey)
+  lockBodyScroll()
 })
 onBeforeUnmount(() => {
   document.removeEventListener('keydown', onKey)
+  unlockBodyScroll()
 })
 
 const widthClass = props.widthClass ?? 'max-w-2xl'
@@ -30,7 +33,7 @@ const widthClass = props.widthClass ?? 'max-w-2xl'
 
 <template>
   <div
-    class="fixed inset-0 z-50 bg-ink-900/40 backdrop-blur-[2px] flex items-start justify-center overflow-y-auto py-10 px-4"
+    class="fixed inset-0 z-50 bg-ink-900/50 flex items-start justify-center overflow-y-auto py-10 px-4"
     @mousedown="onOverlay"
   >
     <div

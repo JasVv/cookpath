@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import MonthCalendar from '@/components/calendar/MonthCalendar.vue'
 import WeekCalendar from '@/components/calendar/WeekCalendar.vue'
 import MenuEditModal from '@/components/menu/MenuEditModal.vue'
 import type { MenuEntry } from '@/domain/types'
 import { useMenus } from '@/composables/useMenus'
+import { lockBodyScroll, unlockBodyScroll } from '@/composables/useBodyScrollLock'
 import {
   addDays,
   addMonths,
@@ -25,6 +26,24 @@ const dragSourceDate = ref<string | null>(null)
 const dropTargetDate = ref<string | null>(null)
 
 const dropConfirm = ref<null | { fromDate: string; toDate: string }>(null)
+
+// dropConfirm 表示中は body のスクロールをロックする
+let dropConfirmLocked = false
+watch(dropConfirm, (v) => {
+  if (v && !dropConfirmLocked) {
+    lockBodyScroll()
+    dropConfirmLocked = true
+  } else if (!v && dropConfirmLocked) {
+    unlockBodyScroll()
+    dropConfirmLocked = false
+  }
+})
+onBeforeUnmount(() => {
+  if (dropConfirmLocked) {
+    unlockBodyScroll()
+    dropConfirmLocked = false
+  }
+})
 
 const monthRange = computed(() => {
   const days = monthGridDays(monthAnchor.value)
@@ -167,7 +186,7 @@ function cancelDrop() {
 
     <div
       v-if="dropConfirm"
-      class="fixed inset-0 z-50 bg-ink-900/40 backdrop-blur-[2px] flex items-center justify-center p-4"
+      class="fixed inset-0 z-50 bg-ink-900/50 flex items-center justify-center p-4"
       @mousedown.self="cancelDrop"
     >
       <div class="bg-surface rounded-xl shadow-raised border border-border w-full max-w-md p-5">
