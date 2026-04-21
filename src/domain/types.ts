@@ -30,3 +30,11 @@ export interface AppMeta {
   id: 'singleton'
   lastExportedAt: Date | null
 }
+
+// 買い物のたびにチェックする日用品（食材とは別管理）
+export interface Supply {
+  id: string
+  name: string
+  createdAt: Date
+  updatedAt: Date
+}

@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 const navItems = [
   { to: '/', label: 'カレンダー' },
   { to: '/recipes', label: 'レシピ' },
+  { to: '/supplies', label: '日用品' },
   { to: '/shopping', label: '買い物リスト' },
   { to: '/settings', label: '設定' },
 ]
