@@ -45,13 +45,15 @@ cookpath/
 │   │   ├── repositories/      # エンティティごとの Repository 関数
 │   │   │   ├── recipes.ts
 │   │   │   ├── menus.ts
+│   │   │   ├── supplies.ts    # 日用品マスタ
 │   │   │   └── meta.ts        # 最終 export 日時など
 │   │   └── backup.ts          # JSON export/import
 │   ├── domain/
-│   │   └── types.ts           # Recipe / Dish / Ingredient / MenuEntry の型
+│   │   └── types.ts           # Recipe / Dish / Ingredient / MenuEntry / Supply の型
 │   ├── pages/
 │   │   ├── CalendarPage.vue   # トップ（月＋週カレンダー）
 │   │   ├── RecipesPage.vue    # レシピ管理
+│   │   ├── SuppliesPage.vue   # 日用品管理
 │   │   ├── ShoppingListPage.vue
 │   │   └── SettingsPage.vue
 │   ├── components/
@@ -74,6 +76,7 @@ cookpath/
 │   │       └── ModalBase.vue
 │   ├── composables/
 │   │   ├── useRecipes.ts
+│   │   ├── useSupplies.ts
 │   │   ├── useMenus.ts
 │   │   ├── useShoppingList.ts
 │   │   ├── usePersistentStorage.ts

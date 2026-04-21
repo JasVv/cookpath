@@ -190,6 +190,39 @@
 
 ---
 
+### Step 10: 日用品機能（後追加）
+
+**目的**: 「毎回買う日用品」を別マスタで管理し、買い物リストに常時表示する。あわせて買い物リストのチェック状態を画面遷移を跨いで保持できるようにする
+
+**作業内容**
+1. `src/domain/types.ts` に `Supply` 型を追加（`id` / `name` / `createdAt` / `updatedAt`）
+2. `src/db/schema.ts` の Dexie バージョンを 2 に上げ、`supplies: 'id, name, createdAt'` を追加（v1→v2 マイグレーションは Dexie が自動処理）
+3. `src/db/repositories/supplies.ts` に `listSupplies` / `createSupply` / `updateSupply` / `deleteSupply` を実装
+4. `src/composables/useSupplies.ts` を実装
+5. `src/pages/SuppliesPage.vue` を実装（追加フォーム + インライン編集対応の一覧）
+6. `src/router/index.ts` に `/supplies` ルートを追加（レシピと買い物リストの間）
+7. `src/components/layout/AppHeader.vue` のナビに「日用品」を追加
+8. `src/composables/useShoppingList.ts` を更新
+   - 状態をモジュールレベルに昇格（画面遷移を跨いだ保持）
+   - `supplies` も読み込み、`SupplyRow[]` を別配列で保持
+   - 行 ID を内容ベース化し、内容変更・削除でチェックが自動解除される仕組みに変更
+9. `src/pages/ShoppingListPage.vue` を更新
+   - 「食材」「日用品」の 2 セクション構成（食材が上、日用品が下）
+   - 日用品 0 件時は日用品セクション非表示
+   - `onMounted` で自動再生成
+   - `max-w-3xl` で横幅制限
+10. `src/db/backup.ts` の `formatVersion` を 2 に bump し、`supplies` を export/import に追加。旧 v1 ファイルもインポート可能（supplies は空配列扱い）
+
+**完了条件**
+- 日用品の追加・編集・削除ができる
+- 買い物リストに食材と日用品が別セクションで表示される
+- 食材行・日用品行とも、画面遷移を跨いでチェックが保持される
+- 食材は内容変更（分量・単位など）でチェックが解除される
+- 日用品は改名でチェックが解除される
+- 行が削除されたらチェックも消える
+
+---
+
 ## 5.3 追加で検討する事項（初期実装後）
 
 以下は初期スコープに含めないが、実装進行中に気づいたらメモしておく。

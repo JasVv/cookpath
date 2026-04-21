@@ -8,6 +8,7 @@
 | `Ingredient` | 材料（`Recipe` と `Dish` の両方に含まれる値オブジェクト）。 |
 | `MenuEntry` | 1日分の献立。`date` をキーとし、複数の `Dish` を持つ。 |
 | `Dish` | 1日内の1料理。レシピ参照あり／なしのいずれも可。 |
+| `Supply` | 日用品マスタ。日用品管理画面で CRUD し、買い物リストに常時表示する。 |
 | `AppMeta` | アプリ全体のメタ情報（最終 export 日時など）。 |
 
 ## 3.2 TypeScript 型定義
@@ -73,6 +74,19 @@ export interface AppMeta {
   id: 'singleton'               // 常に 1 レコードのみ
   lastExportedAt: Date | null
 }
+
+/**
+ * 日用品（買い物のたびに毎回チェックする品目）
+ *
+ * - 食材とは別管理。期間指定とは無関係に買い物リストへ常時表示する
+ * - 名前のみを持つ最小モデル（分量・単位は持たない）
+ */
+export interface Supply {
+  id: string              // UUID
+  name: string
+  createdAt: Date
+  updatedAt: Date
+}
 ```
 
 ## 3.3 IndexedDB スキーマ（Dexie.js）
@@ -80,12 +94,13 @@ export interface AppMeta {
 ```typescript
 // src/db/schema.ts
 import Dexie, { type Table } from 'dexie'
-import type { Recipe, MenuEntry, AppMeta } from '@/domain/types'
+import type { Recipe, MenuEntry, AppMeta, Supply } from '@/domain/types'
 
 export class CookpathDB extends Dexie {
   recipes!: Table<Recipe, string>      // 主キー: id
   menus!: Table<MenuEntry, string>     // 主キー: date ("YYYY-MM-DD")
   meta!: Table<AppMeta, string>        // 主キー: id ('singleton' 固定)
+  supplies!: Table<Supply, string>     // 主キー: id
 
   constructor() {
     super('cookpath')
@@ -93,6 +108,13 @@ export class CookpathDB extends Dexie {
       recipes: 'id, name, updatedAt',   // name / updatedAt はインデックス（検索・並び替え用）
       menus: 'date',
       meta: 'id',
+    })
+    // v2: 日用品テーブルを追加
+    this.version(2).stores({
+      recipes: 'id, name, updatedAt',
+      menus: 'date',
+      meta: 'id',
+      supplies: 'id, name, createdAt',
     })
   }
 }
@@ -105,6 +127,11 @@ export const db = new CookpathDB()
 - `recipes.name`: レシピ管理画面の検索・並び替えで使用
 - `recipes.updatedAt`: 「更新日新順」ソートで使用
 - `menus.date`: 月・週カレンダーで期間指定の `where('date').between(...)` を効かせる
+- `supplies.name` / `supplies.createdAt`: 日用品の並び替え（名前順 / 登録順）で使用
+
+### マイグレーション
+
+- v1 → v2: `supplies` テーブルを新規追加するのみ（既存データの変換はなし）。Dexie が自動でマイグレートする
 
 ## 3.4 Repository 関数（方針）
 
@@ -208,21 +235,56 @@ function cloneDishes(dishes: Dish[]): Dish[] {
 }
 ```
 
+```typescript
+// src/db/repositories/supplies.ts
+import { db } from '@/db/schema'
+import type { Supply } from '@/domain/types'
+import { genId } from '@/utils/id'
+
+export async function listSupplies(): Promise<Supply[]> {
+  const all = await db.supplies.toArray()
+  // 登録順（古いものが上）で安定させる
+  all.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+  return all
+}
+
+export async function createSupply(name: string): Promise<Supply> {
+  const now = new Date()
+  const supply: Supply = { id: genId(), name: name.trim(), createdAt: now, updatedAt: now }
+  await db.supplies.put(supply)
+  return supply
+}
+
+export async function updateSupply(id: string, name: string): Promise<void> {
+  const existing = await db.supplies.get(id)
+  if (!existing) return
+  await db.supplies.put({ ...existing, name: name.trim(), updatedAt: new Date() })
+}
+
+export async function deleteSupply(id: string): Promise<void> {
+  await db.supplies.delete(id)
+}
+```
+
 ## 3.5 JSON Export / Import フォーマット
 
 ```typescript
 // src/db/backup.ts
 export interface BackupFile {
-  formatVersion: 1
+  formatVersion: 2
   exportedAt: string         // ISO8601
   recipes: Recipe[]
   menus: MenuEntry[]
+  supplies: Supply[]
 }
 ```
 
 - Export: 上記形式の JSON を Blob 化してダウンロード。ファイル名例: `cookpath-backup-YYYYMMDD-HHmm.json`
-- Import: ファイルを読み込み、`formatVersion` をチェック → 既存 `recipes` / `menus` を全削除 → 投入 → `meta.lastExportedAt` は更新しない（Export 時のみ更新）
-- `formatVersion` は将来のスキーマ変更に備える。1 以外なら拒否する
+- Import: ファイルを読み込み、`formatVersion` をチェック → 既存 `recipes` / `menus` / `supplies` を全削除 → 投入 → `meta.lastExportedAt` は更新しない（Export 時のみ更新）
+- `formatVersion` は将来のスキーマ変更に備える
+  - 現行版は **2** を出力する
+  - 旧版 **1**（`supplies` フィールドが無い）も読み込み可能。インポート時は `supplies` を空配列として扱う
+  - 1 / 2 以外は拒否する
 
 ## 3.6 永続化・ストレージ関連
 
