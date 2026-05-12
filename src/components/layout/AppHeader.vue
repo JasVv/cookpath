@@ -11,12 +11,12 @@ const navItems = [
 </script>
 
 <template>
-  <header class="bg-surface border-b border-border px-7 py-3.5 flex items-center gap-8">
+  <header class="bg-surface border-b border-border px-7 py-3.5 flex items-center gap-6">
     <h1 class="font-bold whitespace-nowrap">
       <span class="text-primary text-lg">Cookpath</span>
       <span class="text-text-muted font-normal text-xs ml-1.5">−メニュー記録と買い物サポート−</span>
     </h1>
-    <nav class="ml-auto flex gap-1">
+    <nav class="flex gap-1">
       <RouterLink
         v-for="item in navItems"
         :key="item.to"
